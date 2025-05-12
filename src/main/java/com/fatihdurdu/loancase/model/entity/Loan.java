@@ -22,9 +22,10 @@ public class Loan {
 
     private BigDecimal loanAmount;
     private Integer numberOfInstallment;
+    private BigDecimal interestRate;
     private LocalDate createDate;
     private Boolean isPaid;
 
-    @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Installment> installments;
 }

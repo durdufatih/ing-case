@@ -33,11 +33,4 @@ public class InstallmentController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
-    @GetMapping("/loan/{loanId}")
-    public ResponseEntity<List<Installment>> getInstallmentsByLoanId(@PathVariable Long loanId) {
-        return loanService.getLoanById(loanId)
-                .map(loan -> ResponseEntity.ok(installmentRepository.findByLoanOrderByInstallmentNumber(loan)))
-                .orElse(ResponseEntity.notFound().build());
-    }
 }

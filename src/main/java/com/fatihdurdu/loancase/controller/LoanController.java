@@ -1,16 +1,16 @@
 package com.fatihdurdu.loancase.controller;
 
 import com.fatihdurdu.loancase.model.dto.CreateLoanRequest;
+import com.fatihdurdu.loancase.model.dto.LoanResponse;
 import com.fatihdurdu.loancase.model.entity.Loan;
 import com.fatihdurdu.loancase.service.LoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/loans")
@@ -24,10 +24,10 @@ public class LoanController {
     }
 
     @PostMapping
-    public ResponseEntity<Loan> createLoan(@RequestBody CreateLoanRequest request) {
+    public ResponseEntity<LoanResponse> createLoan(@RequestBody CreateLoanRequest request) {
         try {
-            Loan createdLoan = loanService.saveLoan(request);
-            return new ResponseEntity<>(createdLoan, HttpStatus.CREATED);
+            LoanResponse loanResponse = loanService.saveLoan(request);
+            return new ResponseEntity<>(loanResponse, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid input: " + e.getMessage());
         } catch (RuntimeException e) {
@@ -35,5 +35,18 @@ public class LoanController {
 
         }
     }
+
+    @GetMapping
+    public ResponseEntity<LoanResponse> listLoans(
+            @RequestParam Long customerId,
+            @RequestParam(required = false) Integer numberOfInstallment,
+            @RequestParam(required = false) Boolean isPaid) {
+
+        // Delegate to service to handle filtering logic
+        return ResponseEntity.ok(
+            loanService.getLoansByFilters(customerId, numberOfInstallment, isPaid)
+        );
+    }
+
 
 }
