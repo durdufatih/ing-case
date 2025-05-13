@@ -33,6 +33,9 @@ public class LoanService {
     private final LoanRepository loanRepository;
     private final CustomerService customerService;
 
+    public Loan findById(Long id) {
+        return loanRepository.findById(id).orElse(null);
+    }
 
     @Transactional
     public LoanResponse saveLoan(CreateLoanRequest loan) {
@@ -62,16 +65,19 @@ public class LoanService {
                 .customer(customer)
                 .interestRate(loan.getInterestRate())
                 .numberOfInstallment(loan.getNumberOfInstallment())
-                .installments(createInstallments(loan.getLoanAmount(), loan.getInterestRate(),loan.getNumberOfInstallment()))
                 .createDate(LocalDate.now())
                 .build();
         logger.info("Loan value created: {}", loanValue);
+        loanValue = loanRepository.save(loanValue);
+        logger.info("Saving loan value has been started.");
+        loanValue.setInstallments(createInstallments(loanValue, loan.getInterestRate(),loan.getNumberOfInstallment()));
+        loanValue = loanRepository.save(loanValue);
+        logger.info("Saving loan value has been finished.");
 
         customer.setUsedCreditLimit(loan.getLoanAmount());
         customer.setCreditLimit(customer.getCreditLimit().subtract(loan.getLoanAmount()));
         customerService.saveCustomer(customer);
-        logger.info("Saving loan value has been started.");
-        loanValue = loanRepository.save(loanValue);
+        logger.info("Saving customer limit value has been finished.");
        return LoanResponse.builder()
                 .customerName(customer.getName())
                 .customerSurname(customer.getSurname())
@@ -81,8 +87,8 @@ public class LoanService {
 
     }
 
-    private List<Installment> createInstallments( BigDecimal amount,BigDecimal interestRate, Integer termInMonths) {
-        BigDecimal totalAmount = amount.multiply(BigDecimal.ONE.add(interestRate));
+    private List<Installment> createInstallments(Loan loan,BigDecimal interestRate, Integer termInMonths) {
+        BigDecimal totalAmount = loan.getLoanAmount().multiply(BigDecimal.ONE.add(interestRate));
         BigDecimal installmentAmount = totalAmount.divide(BigDecimal.valueOf(termInMonths), RoundingMode.HALF_UP);
         List<Installment> installments = new ArrayList<>();
 
@@ -90,6 +96,7 @@ public class LoanService {
             Installment installment = Installment.builder()
                     .installmentNumber(i)
                     .amount(installmentAmount)
+                    .loan(loan)
                     .dueDate(LocalDate.now().plusMonths(i).withDayOfMonth(1))
                     .build();
             installments.add(installment);

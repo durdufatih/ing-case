@@ -18,7 +18,7 @@ public class Installment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "loan_id")
     private Loan loan;
 

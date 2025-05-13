@@ -26,6 +26,6 @@ public class Loan {
     private LocalDate createDate;
     private Boolean isPaid;
 
-    @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL,fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Installment> installments;
 }

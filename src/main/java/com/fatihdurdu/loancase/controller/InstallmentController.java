@@ -1,36 +1,33 @@
 package com.fatihdurdu.loancase.controller;
 
-import com.fatihdurdu.loancase.model.entity.Installment;
-import com.fatihdurdu.loancase.repository.InstallmentRepository;
-import com.fatihdurdu.loancase.service.LoanService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fatihdurdu.loancase.model.dto.InstallmentResponse;
+import com.fatihdurdu.loancase.service.InstallmentService;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/installments")
+@AllArgsConstructor
 public class InstallmentController {
 
-    private final InstallmentRepository installmentRepository;
-    private final LoanService loanService;
+    private final InstallmentService installmentService;
 
-    @Autowired
-    public InstallmentController(InstallmentRepository installmentRepository, LoanService loanService) {
-        this.installmentRepository = installmentRepository;
-        this.loanService = loanService;
+
+    @GetMapping("/loan/{loanId}")
+    public ResponseEntity<List<InstallmentResponse>> getInstallmentsByLoanId(@PathVariable Long loanId) {
+        try {
+            return ResponseEntity.ok(installmentService.getInstallmentsByLoanId(loanId));
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid input: " + e.getMessage());
+        }
     }
 
-    @GetMapping
-    public ResponseEntity<List<Installment>> getAllInstallments() {
-        return ResponseEntity.ok(installmentRepository.findAll());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Installment> getInstallmentById(@PathVariable Long id) {
-        return installmentRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
 }

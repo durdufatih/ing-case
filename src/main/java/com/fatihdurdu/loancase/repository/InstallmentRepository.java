@@ -11,7 +11,7 @@ import java.util.List;
 public interface InstallmentRepository extends JpaRepository<Installment, Long> {
     
     // Find installments by loan
-    List<Installment> findByLoan(Loan loan);
+    List<Installment> findByLoanId(Long id);
     
     // Find installments by loan ordered by installment number
     List<Installment> findByLoanOrderByInstallmentNumber(Loan loan);
