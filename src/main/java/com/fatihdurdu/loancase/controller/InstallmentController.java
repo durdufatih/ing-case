@@ -3,7 +3,6 @@ package com.fatihdurdu.loancase.controller;
 import com.fatihdurdu.loancase.model.dto.InstallmentResponse;
 import com.fatihdurdu.loancase.model.dto.PayResponse;
 import com.fatihdurdu.loancase.service.InstallmentService;
-import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

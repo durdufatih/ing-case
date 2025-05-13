@@ -56,6 +56,7 @@ public class LoanService {
      * @return the saved Loan entity
      */
     public Loan save(Loan loan) {
+        if(Objects.isNull(loan)) throw new IllegalArgumentException("Loan is null");
         return loanRepository.save(loan);
     }
 
@@ -188,7 +189,11 @@ public class LoanService {
                 .interestRate(loan.getInterestRate())
                 .createDate(loan.getCreateDate())
                 .isPaid(loan.getIsPaid())
-                .installments(loan.getInstallments().stream().map(this::convertToInstallmentResponse).collect(Collectors.toList()))
+                .installments(loan.getInstallments() != null 
+                    ? loan.getInstallments().stream()
+                        .map(this::convertToInstallmentResponse)
+                        .collect(Collectors.toList())
+                    : new ArrayList<>())
                 .build();
     }
 

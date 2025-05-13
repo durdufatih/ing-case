@@ -3,11 +3,10 @@ package com.fatihdurdu.loancase.service;
 import com.fatihdurdu.loancase.model.entity.Customer;
 import com.fatihdurdu.loancase.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -35,6 +34,7 @@ public class CustomerService {
          * @return the saved customer entity
          */
     public Customer saveCustomer(Customer customer) {
+        if(Objects.isNull(customer)) throw new IllegalArgumentException("Customer is null");
         return customerRepository.save(customer);
     }
 
