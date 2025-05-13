@@ -51,20 +51,41 @@ src/main/java/com/example/loancase/
 
 The application will start on port 8080 by default.
 
+### Running in Production Mode
+
+To run the application in production mode, specify the `prod` profile:
+This prod env run application with ddl none mode you have to create all tables before running
+```
+./mvnw spring-boot:run -Dspring-boot.run.profiles=prod
+```
+or
+```
+mvn spring-boot:run -Dspring-boot.run.profiles=prod
+```
+
+## Running Tests
+
+To run the tests, use the following Maven command:
+```
+./mvnw test
+```
+or
+```
+mvn test
+```
+
 ## API Endpoints
 
 ### Home
 - `GET /` - Welcome message
 
 ### Loan Management
-- `GET /api/loans` - Get all loans
-- `GET /api/loans/{id}` - Get a loan by ID
-- `GET /api/loans/customer/{name}` - Get loans by customer name
-- `GET /api/loans/status/{status}` - Get loans by status
-- `GET /api/loans/amount-greater-than/{amount}` - Get loans with amount greater than specified
-- `POST /api/loans` - Create a new loan
-- `PUT /api/loans/{id}` - Update an existing loan
-- `DELETE /api/loans/{id}` - Delete a loan
+- \`GET /api/loans\` \- List loans (with optional filters)
+- \`POST /api/loans\` \- Create a new loan
+
+### Installment Management- 
+- \`GET /api/installments/loan/{loanId}\` \- List installments for a loan
+- \`POST /api/installments/loan/{loanId}?amount={amount}\` \- Pay installments for a loan
 
 ## H2 Database Console
 
@@ -81,3 +102,25 @@ The application is initialized with sample loan data:
 - Jane Smith: $25,000 loan for 24 months at 4.75% interest (APPROVED)
 - Michael Johnson: $5,000 loan for 6 months at 6.25% interest (REJECTED)
 - Sarah Williams: $15,000 loan for 18 months at 5.0% interest (APPROVED)
+
+## Contributing
+
+Contributions are welcome! To contribute:
+
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix:
+   ```
+   git checkout -b feature-name
+   ```
+3. Commit your changes:
+   ```
+   git commit -m "Description of changes"
+   ```
+4. Push to your branch:
+   ```
+   git push origin feature-name
+   ```
+5. Open a pull request on GitHub.
+
+Please ensure your code follows the project's coding standards and includes appropriate tests.
+`
