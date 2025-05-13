@@ -14,7 +14,6 @@ import java.util.List;
 @Builder
 public class LoanResponse {
 
-    private Long id;
     private String customerName;
     private String customerSurname;
     private BigDecimal customerLimit;
